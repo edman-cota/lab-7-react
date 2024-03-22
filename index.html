@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Button State Example</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const BlogPost = ({ post }) => {
+        return (
+          <div
+            style={{
+              display: 'flex',
+              borderRadius: 4,
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              width: 300,
+              minWidth: 300,
+              height: 350,
+              padding: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            <h2>{post.title}</h2>
+            <p style={{ marginBottom: 4, color: 'gray' }}>{post.created_at}</p>
+
+            <img
+              width={300}
+              style={{ borderRadius: 6 }}
+              src='https://lh3.googleusercontent.com/SMZasrMvgS8LMGCxsSnZqBPZD9KmPIcSXjYU85T-Dd0DQCFo6IWCGckK0rhO6K2J-KD1bMZw2XaiNz1JkgdDUaPs1g=s1280-w1280-h800'
+            />
+          </div>
+        );
+      };
+
+      const App = () => {
+        const [posts, setPosts] = React.useState([]);
+
+        const getPosts = async () => {
+          let listado = await fetch('http://localhost:19830/posts');
+          let listado_json = await listado.json();
+          setPosts(listado_json);
+        };
+
+        React.useEffect(() => {
+          getPosts();
+        }, []);
+
+        return (
+          <div
+            style={{
+              height: '100vh',
+              width: '100vw',
+              backgroundColor: '#ECEFF8',
+              margin: 'auto',
+              padding: 10,
+            }}
+          >
+            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+              {posts.map((post) => {
+                return <BlogPost key={post.id} post={post} />;
+              })}
+            </div>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
